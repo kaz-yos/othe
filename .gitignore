@@ -1,3 +1,15 @@
+*~
+*.zip
+*.tar.gz
+*.RData
+*.pdf
+*.png
+*.doc*
+*.ppt*
+*.xls*
+*.csv
+figure/
+cache/
 /target
 /classes
 /checkouts

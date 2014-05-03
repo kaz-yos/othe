@@ -37,6 +37,6 @@
   "Add row number"
   [brd]
   (map str                                      ; map str to the following lists
-       (range (inc first-row) (inc last-row))   ; list 1
-       (repeat b-size " ")                      ; list 2
-       (board-strs brd)))                       ; list 3
+       (range (inc first-row) (inc last-row))   ; list 1: row numbers
+       (repeat b-size " ")                      ; list 2: spaces
+       (board-strs brd)))                       ; list 3: board status in strings

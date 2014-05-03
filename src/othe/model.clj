@@ -225,3 +225,20 @@
          (alter board manipulated-board manip))
        (alter player next-player @board)
        (observer)))))
+
+;; API function to obtain the model status
+(defn- retrieve-game-state
+  "Give :b if black is playing, :w if white is playing, :over if game over"
+  []
+  (let [brd @board
+        bw  @player]
+    ;; If no free cell is available
+    (if (empty?
+         (filter
+          (fn [pos] (free? brd pos))
+          all-pos))
+      ;; Return over
+      :over
+      ;; Otherwise return the player
+      bw)))
+

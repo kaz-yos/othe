@@ -35,22 +35,33 @@
 ;; Mutable player order
 (def player (ref nil))
 
+;; Function to obtain neighboring cell positions
+(def successor
+  (let [north (fn [pos (- pos b-size)]) ; To go up, subtract number of columns
+        east  inc                       ; To go right, add one
+        south (fn [pos (- pos b-size)]) ; To go down, add number of columns
+        west  dec]
 
+    ;; Define functions as map
+    {:n  north
+     :ne (comp north east)
+     :e  east
+     :se (comp south east)
+     :s  south
+     :sw (comp south west)
+     :w  west
+     :nw (comp north west)}))
 
+;; Define a map of functions to detect wrapping at the end
+(def not-wrapped?
+  (let [east? (fn [pos] (> (col-from-pos pos) first-col))       ; index should be > 0
+        west? (fn [pos] (< (col-from-pos pos) (dec last-col)))] ; index should be < 7 (8th)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    {:n  identity
+     :ne east?
+     :e  east?
+     :se east?
+     :s  identity
+     :sw west?
+     :w  west?
+     :nw west?}))

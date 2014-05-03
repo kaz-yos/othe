@@ -121,3 +121,41 @@
    (some                                ; Check all poslines for at least one clamping? true posline
     (fn [pl] (clamping? brd pl bw))
     (all-poslines pos))))
+
+;; Initialization function
+(def initial-oprs
+  "opr map for the initial status"
+  (let [cntr (dec (quot b-size 2))
+        pos  (pos-from-rowcol cntr cntr)]
+    {pos :b
+     ((successor :se) pos) :b
+     ((successor :e)  pos) :w
+     ((successor :s)  pos) :w}))
+
+;; A closure to create a board
+(defn- board-manipulator
+  "Closure to create a board based on opr map"
+  [oprs]
+  (fn [pos st] (if-let [s (oprs pos)]
+                 s
+                 st)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

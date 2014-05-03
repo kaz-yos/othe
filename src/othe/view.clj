@@ -40,3 +40,31 @@
        (range (inc first-row) (inc last-row))   ; list 1: row numbers
        (repeat b-size " ")                      ; list 2: spaces
        (board-strs brd)))                       ; list 3: board status in strings
+
+;; Miscellaneous components
+(def separator (join (repeat 50 \-)))
+
+(def- score-str
+  "String for score"
+  [bw ws]
+  (let [s (str "BLACK(x):" bs ", WHITE(o):" ws)]
+    (format "%50s" s)))
+
+(defn- winner-str
+  "String for the winner"
+  [bs ws]
+  (cond
+   (> bs ws) "Winner is BLACK. Congratulations!"
+   (> ws bs) "Yea, WHITE, won!!!"
+   :else     "It's a draw game."))
+
+;; Function to redraw the board
+(defn- redraw-board
+  "Show the board"
+  []
+  (println col-header-str)
+  (dorun
+   (map println
+        (board-strs-with-row (retrieve-board)))))
+
+

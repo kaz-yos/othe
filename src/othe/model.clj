@@ -97,3 +97,27 @@
   (filter not-empty
           (for [dir dirs]                       ; Non-argument access to a global variable dirs
             (posline-for-dir pos dir))))
+
+;; Check if a new stone can be placed at pos in a given posline
+(defn- clamping?
+  "If the posline is usable for bw"
+  [brd posline bw]
+  (and
+   (opponent? brd (first posline) bw) ; check if the neighboring cell is opponent cell
+   (if-let
+       ;; Assign the first pos not opponent in a given dir except the very first cell
+       [fst (first (filter (fn [pos] (not (opponent? brd pos bw))) (rest posline)))]
+     ;; Return this if fst is true
+     (self? brd fst bw)
+     ;; Return nil if fst is nil (no non-opponent cells in that dir)
+     nil)))
+
+;; Check if a given cell is playable cell (use clamping? to all poslines)
+(defn- playable?
+  "Check if pos is a playable cell for bw."
+  [brd pos bw]
+  (and
+   (free? brd pos)
+   (some                                ; Check all poslines for at least one clamping? true posline
+    (fn [pl] (clamping? brd pl bw))
+    (all-poslines pos))))

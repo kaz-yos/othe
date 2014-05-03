@@ -65,3 +65,21 @@
      :sw west?
      :w  west?
      :nw west?}))
+
+;; Define a function to test
+(defn- in-board? [pos]
+  (and (>= pos first-pos)       ; It should be >= pos
+       (<  pos last-pos)))      ; It should be < (* b-size b-size)
+
+
+;; Function to obtain posline
+(defn- posline-for-dir
+  "Cells available from pos in dir direction"
+  [pos dir]
+  (let [suc    (successor    dir)       ; Function to pick neighboring cell position in dir (map as function for a key)
+        nwrap? (not-wrapped? dir)]      ; Function to check wrapping in dir (map as function for a key)
+    (take-while                         ; Take while within valid range
+     (fn [pos]
+       (and (nwrap?    pos)
+            (in-board? pos)))
+     (iterate suc (suc pos)))))         ; successively take the neighboring cells

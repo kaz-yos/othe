@@ -71,7 +71,6 @@
   (and (>= pos first-pos)       ; It should be >= pos
        (<  pos last-pos)))      ; It should be < (* b-size b-size)
 
-
 ;; Function to obtain posline
 (defn- posline-for-dir
   "Cells available from pos in dir direction"
@@ -83,3 +82,18 @@
        (and (nwrap?    pos)
             (in-board? pos)))
      (iterate suc (suc pos)))))         ; successively take the neighboring cells
+
+;; Miscellaneous functions
+(defn- free? [brd pos] (= (brd pos) :free))
+(defn- self? [brd pos bw]
+  (and (not (free? brd pos))
+       (= (brd pos) bw)))
+(defn- opponent? [brd pos bw]
+  (and (not free? brd pos)
+       (not= (brd pos) bw)))
+(defn- all-poslines
+  "Return the sequence of poslines for all dirs at a given pos"
+  [pos]
+  (filter not-empty
+          (for [dir dirs]                       ; Non-argument access to a global variable dirs
+            (posline-for-dir pos dir))))

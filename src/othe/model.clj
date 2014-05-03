@@ -28,3 +28,29 @@
 
 ;; Collection of all possible directions
 (def dirs #{:n :ne :e :se :s :sw :w :nw})
+
+;; Mutable board status (ref)
+(def board (ref []))
+
+;; Mutable player order
+(def player (ref nil))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

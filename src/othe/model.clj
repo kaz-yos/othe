@@ -140,22 +140,88 @@
                  s
                  st)))
 
+;; A function to return the manipulated board
+(defn- manipulated-board
+  "New status of the board after manipulator"
+  [brd manip]
+  (vec (map-indexed manip brd)))
+
+;; Initial status
+(let
+    [blank (vec (repeat (- last-pos first-pos) :free))
+     manip (board-manipulator initial-oprs)]
+  (manipulated-board blank manip))
+
+;; 1 move
+(defn- make-oprs
+  "Calculate opr for bw for a given posline"
+  [brd posline bw]
+  (reduce (fn [m pos] (assoc m pos bw)) {}
+          (take-while
+           (fn [pos] (opponent? brd pos bw))
+           posline)))
+
+(defn- make-all-oprs
+  "Calculate opr for all poslines for bw"
+  [brd pos bw]
+  (apply merge  ; Combine all operations for all poslines
+         (cons {pos bw} ; Add pos and bw for the operation
+               (for [posline
+                     (filter    ; Filter poslines for clamping? true ones
+                      (fn [pos] (clamping? brd pos bw))
+                      (all-posilines pos))]
+                 (make-oprs brd posline bw))))) ; Create operation for each posline
 
 
+;; Initialize a new game (Called from core for its side effects)
+(defn init-game
+  "Start a new game"
+  [ob]
+  (dosync       ; atomic manipulation of refrence objects
+   (let [blank
+         (vec
+          (repeat (- last-pos first-pos) :free))
+         manip
+         (board-manipulator initial-oprs)]
+     ;; Set the board status to the initial status
+     (ref-set board
+              (manipulated-board blank manip)))
+   ;; Set the initial player to :b
+   (ref-set player :b)
+   (def observer ob))
+  (observer))
 
+;; Play move to update the board and player
+(defn- opponent [bw] (if (= bw :b) :w :b))
+(defn- has-pos-to-play?
+  "Check if there is any available cells for bw"
+  [brd bw]
+  (not-empty
+   (filter
+    (fn [pos] (playable? brd pos bw))
+    all-pos)))
 
+;; Skip a player if not playable
+(defn- next-player
+  "Decide the next player."
+  [bw brd]
+  (let [nbw (opponent bw)]
+    (if (has-pos-to-play? brd nbw) nbw bw)))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+;; Actual playing function (user function)
+(defn play-move
+  "Play for a pos"
+  [pos]
+  (dosync
+   (if (not (playable? @board pos @player))     ; Get values from reference objects.
+     ;; if not playable
+     (observer :err)
+     ;; if playable
+     (do
+       (let
+           [manip
+            (board-manipulator
+             (make-all-oprs @board pos @player))]
+         (alter board manipulated-board manip))
+       (alter player next-player @board)
+       (observer)))))

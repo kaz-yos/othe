@@ -242,3 +242,22 @@
       ;; Otherwise return the player
       bw)))
 
+;; Occupancy checker
+(defn- occupancy
+  "How many cells bw have"
+  [brd bw]
+  (count
+   (filter
+    (fn [pos] (= (brd pos) bw))
+    all-pos)))
+
+;; Game status checkers
+(defn is-game-over? []
+  (= (retrieve-game-state) :over))
+(defn is-black-turn? []
+  (= (retrieve-game-state) :b))
+(defn count-blacks [] (occupancy @board :b))
+(defn count-whites [] (occupancy @board :w))
+(defn retrieve-board [] @board)
+
+

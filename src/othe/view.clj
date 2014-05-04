@@ -68,6 +68,16 @@
         (board-strs-with-row (retrieve-board)))))
 
 ;;
+(defn init-view
+  "Initialize view. Handler is the user command handler"
+  [handler]
+  (println "Welcome to the Battle Zone!")
+  (println "'x' is Black and 'o' is White.")
+  (println "Input the column name first, like 'a1' or b2'")
+  (println "Just hit Enter to exit.")
+  (def command-handler handler))
+
+;;
 (defn on-state-changed
   "Handler for model change"
   [& e]
@@ -82,46 +92,6 @@
         (println (str "GAME OVER: "
                       (winner-str bs ws)))
         (command-handler [:exit])))))
-
-;;
-(defn init-view
-  "Initialize view. Handler is the user command handler"
-  [handler]
-  (println "Welcome to the Battle Zone!")
-  (println "'x' is Black and 'o' is White.")
-  (println "Input the column name first, like 'a1' or b2'")
-  (println "Just hit Enter to exit.")
-  (def command-handler handler))
-
-;; Check for user input
-(defn- view-thread
-  "Thread to check for user inputs"
-  []
-  (loop [pos (wait-for-cmd)]
-    (when pos
-      (command-handler [:move pos])
-      (recur (wait-for-cmd))))
-  (command-handler [:exit]))
-
-;; Start user interaction
-(defn start-ui
-  "Start user interaction"
-  []
-  (.start (Thread. view-thread)))
-
-;; Check for abnormal commands
-(defn- wait-for-cmd
-  "Wait for user input, and return nil or pos"
-  []
-  (loop [line (read-cmd)]
-    (if (empty? line)
-      (println "Exiting...")
-      (if-let [pos (pos-from-line line)]
-        pos
-        (do
-          (print "Input should be like a1 or b2. Or Enter to exit: ")
-          (flush)
-          (recur (read-cmd)))))))
 
 ;; Read from the stdin
 (defn- read-cmd
@@ -138,12 +108,10 @@
   "Read column from the user input"
   [line]
   (.indexOf col-headers (subs line 0 1)))
-
 (defn- row-from-line
   "Read row from the user input"
   [line]
   (dec (read-string (subs line 1))))
-
 (defn- pos-from-line
   "Read pos from the user input, if invalid, return nil"
   [line]
@@ -151,3 +119,33 @@
     (let [r (row-from-line line)
           c (col-from-line line)]
       (pos-from-rowcol r c))))
+
+;; Check for abnormal commands
+(defn- wait-for-cmd
+  "Wait for user input, and return nil or pos"
+  []
+  (loop [line (read-cmd)]
+    (if (empty? line)
+      (println "Exiting...")
+      (if-let [pos (pos-from-line line)]
+        pos
+        (do
+          (print "Input should be like a1 or b2. Or Enter to exit: ")
+          (flush)
+          (recur (read-cmd)))))))
+
+;; Check for user input
+(defn- view-thread
+  "Thread to check for user inputs"
+  []
+  (loop [pos (wait-for-cmd)]
+    (when pos
+      (command-handler [:move pos])
+      (recur (wait-for-cmd))))
+  (command-handler [:exit]))
+
+;; Start user interaction
+(defn start-ui
+  "Start user interaction"
+  []
+  (.start (Thread. view-thread)))

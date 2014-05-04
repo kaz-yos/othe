@@ -12,7 +12,7 @@
         (map (comp str char)
              (range code-a code-curly))))
 (def col-header-str
-  (str " " (join " " col-headers)))
+  (str "  " (join " " col-headers)))
 
 ;; Convert to string to describe the status of cells (private)
 (defn- st-str

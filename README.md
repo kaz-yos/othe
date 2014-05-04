@@ -1,36 +1,5 @@
-# othe
+# othe game
 
-FIXME: description
+Based on Clojureによる、初めての関数型プログラミング [Kindle版] (First Functional Programming in Clojure)
 
-## Installation
-
-Download from http://example.com/FIXME.
-
-## Usage
-
-FIXME: explanation
-
-    $ java -jar othe-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2014 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+http://www.amazon.co.jp/gp/product/B00FH0AO68/ref=oh_d__o01_details_o01__i00?ie=UTF8&psc=1

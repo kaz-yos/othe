@@ -45,8 +45,8 @@
 (def separator (join (repeat 50 \-)))
 
 (defn- score-str
-  "String for score"
-  [bw ws]
+  "String for scores"
+  [bs ws]
   (let [s (str "BLACK(x):" bs ", WHITE(o):" ws)]
     (format "%50s" s)))
 

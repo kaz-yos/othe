@@ -37,9 +37,9 @@
 
 ;; Function to obtain neighboring cell positions
 (def successor
-  (let [north (fn [pos (- pos b-size)]) ; To go up, subtract number of columns
+  (let [north (fn [pos] (- pos b-size)) ; To go up, subtract number of columns
         east  inc                       ; To go right, add one
-        south (fn [pos (- pos b-size)]) ; To go down, add number of columns
+        south (fn [pos] (+ pos b-size)) ; To go down, add number of columns
         west  dec]
 
     ;; Define functions as map

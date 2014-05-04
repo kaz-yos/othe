@@ -89,7 +89,7 @@
   (and (not (free? brd pos))
        (= (brd pos) bw)))
 (defn- opponent? [brd pos bw]
-  (and (not free? brd pos)
+  (and (not (free? brd pos))
        (not= (brd pos) bw)))
 (defn- all-poslines
   "Return the sequence of poslines for all dirs at a given pos"

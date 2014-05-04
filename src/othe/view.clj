@@ -44,7 +44,7 @@
 ;; Miscellaneous components
 (def separator (join (repeat 50 \-)))
 
-(def- score-str
+(defn- score-str
   "String for score"
   [bw ws]
   (let [s (str "BLACK(x):" bs ", WHITE(o):" ws)]

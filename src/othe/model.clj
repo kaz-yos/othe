@@ -169,7 +169,7 @@
                (for [posline
                      (filter    ; Filter poslines for clamping? true ones
                       (fn [pos] (clamping? brd pos bw))
-                      (all-posilines pos))]
+                      (all-poslines pos))]
                  (make-oprs brd posline bw))))) ; Create operation for each posline
 
 
